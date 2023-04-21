@@ -76,17 +76,22 @@ public class SpringSeleniumTest {
 		WebElement catLength = this.driver.findElement(By.cssSelector("#catLength"));
 		catLength.sendKeys("1");
 
-		// TODO: tick Whiskers
-		// TODO: tick Evil
+		WebElement catWhiskers = this.driver.findElement(By.cssSelector("#catWhiskers"));
+		catWhiskers.click();
+
+		WebElement catEvil = this.driver.findElement(By.cssSelector("#catEvil"));
+		catEvil.click();
 
 		WebElement submitBtn = this.driver.findElement(By.cssSelector("#catForm > div.mt-3 > button.btn.btn-success"));
 		submitBtn.sendKeys(Keys.ENTER);
 
-		WebElement card = this.wait
-				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#output > div:nth-child(2) > div > div")));
+		WebElement card = this.wait.until(
+				ExpectedConditions.elementToBeClickable(By.cssSelector("#output > div:nth-child(2) > div > div")));
 
-		Assertions.assertTrue(card.getText().contains("blah"));
-
+		Assertions.assertTrue(card.getText().contains("Name: blah"));
+		Assertions.assertTrue(card.getText().contains("Length: 1"));
+		Assertions.assertTrue(card.getText().contains("Whiskers: true"));
+		Assertions.assertTrue(card.getText().contains("Evil: true"));
 	}
 
 }
