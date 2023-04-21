@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+chromedriver.exe
+
+/bin
