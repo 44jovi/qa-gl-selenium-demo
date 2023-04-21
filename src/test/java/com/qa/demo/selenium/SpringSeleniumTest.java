@@ -43,7 +43,7 @@ public class SpringSeleniumTest {
 
 	@AfterEach
 	void tearDown() {
-//		this.driver.close();
+		this.driver.close();
 	}
 
 	@Test
