@@ -17,6 +17,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.repository.query.QueryLookupStrategy.Key;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -52,20 +53,7 @@ public class SpringSeleniumTest {
 		WebElement title = this.driver.findElement(By.cssSelector("body > header > h1"));
 		Assertions.assertEquals("CATS", title.getText());
 	}
-
-	@Test
-	void testGetAll() throws InterruptedException {
-		this.driver.get("http://localhost:" + port);
-
-		// One way to wait, using Thread but would always wait the specified time
-		// Thread.sleep(3000);
-
-		WebElement card = this.wait
-				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#output > div > div > div")));
-
-		Assertions.assertTrue(card.getText().contains("Mr Bigglesworth"));
-	}
-
+	
 	@Test
 	void testCreate() {
 		this.driver.get("http://localhost:" + port);
@@ -93,5 +81,65 @@ public class SpringSeleniumTest {
 		Assertions.assertTrue(card.getText().contains("Whiskers: true"));
 		Assertions.assertTrue(card.getText().contains("Evil: true"));
 	}
+
+	@Test
+	void testGetAll() throws InterruptedException {
+		this.driver.get("http://localhost:" + port);
+
+		// One way to wait, using Thread but would always wait the specified time
+		// Thread.sleep(3000);
+
+		WebElement card = this.wait
+				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#output > div > div > div")));
+
+		Assertions.assertTrue(card.getText().contains("Mr Bigglesworth"));
+	}
+	
+
+	@Test
+	void testUpdate() {
+		this.driver.get("http://localhost:" + port);
+
+		WebElement updateBtn = this.wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#output > div > div > div > button:nth-child(5)")));
+		updateBtn.click();
+		
+		WebElement catName = this.wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#updateForm > #catName")));
+		catName.clear();
+		catName.sendKeys("updated");
+
+		WebElement catLength = this.wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#updateForm > #catLength")));
+		catLength.clear();
+		catLength.sendKeys("4");
+
+		WebElement catWhiskers = this.driver.findElement(By.cssSelector("#updateForm > div:nth-child(5) > #catWhiskers"));
+		catWhiskers.click();
+
+		WebElement catEvil = this.driver.findElement(By.cssSelector("#updateForm > div:nth-child(6) > #catEvil"));
+		catEvil.click();
+		
+		//TODO: check if a this.wait is needed
+		WebElement submitBtn = this.wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#updateForm > div.mt-3 > button.btn.btn-success")));
+		submitBtn.click();
+		
+		//TODO: check if a this.wait is needed
+		WebElement closeBtn = this.wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#myModal > div > div > div.modal-header > button")));
+		closeBtn.click();
+		
+		WebElement card = this.wait.until(
+				ExpectedConditions.elementToBeClickable(By.cssSelector("#output > div > div > div")));
+
+		Assertions.assertTrue(card.getText().contains("Name: updated"));
+		Assertions.assertTrue(card.getText().contains("Length: 4"));
+		Assertions.assertTrue(card.getText().contains("Whiskers: false"));
+		Assertions.assertTrue(card.getText().contains("Evil: false"));
+
+	}
+	
+	
+	// TODO: test delete using .isEmpty()
+
+
+	
+	
 
 }
